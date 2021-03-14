@@ -1,46 +1,54 @@
 import React, { useState } from 'react'
 import { options } from '../data/options'
 import { useForm } from '../hook/useForm'
-import { Bar, Pie, Polar, Line } from 'react-chartjs-2';
+import { Bar, Polar } from 'react-chartjs-2';
 import { backgroundColor, borderColor } from '../data/colorChart';
+import { getData } from '../helpers/getData';
 
 export const Selectors = () => {
 
+    const [tipoGrafica, setTipoGrafica] = useState(false)
+
     const [dataChart, setDataChart] = useState({})
+
+    const [alert, setAlert] = useState(false)
 
     const [valueForm, handleChange, , handleChangeCheck] = useForm({
         year: '',
         nuevoProducto: false,
         servicioNuevo: false,
-        servicioInternacional: false
+        servicioInternacional: false,
+        metodoProduccion: false,
+        proyectoEnMarcha: false,
     })
 
-    const { year, nuevoProducto, servicioNuevo, servicioInternacional } = valueForm
+    const {
+        year,
+        nuevoProducto,
+        servicioNuevo,
+        servicioInternacional,
+        metodoProduccion,
+        proyectoEnMarcha } = valueForm
 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         let consulta = {}
-
-        if (year !== '') consulta.AÑO = year
+        if (year !== '') {
+            consulta.AÑO = year
+            setAlert(false)
+        }
+        else {
+            return setAlert(true)
+        }
 
         if (nuevoProducto) consulta.I1R1C1 = '1'
-
         if (servicioNuevo) consulta.I1R2C1 = '1'
-
         if (servicioInternacional) consulta.I1R3C1 = '1'
+        if (metodoProduccion) consulta.I1R9C1 = '1'
+        if (proyectoEnMarcha) consulta.I5R1C1 = '1'
 
-
-
-        const res = await fetch('http://localhost:4001/si', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(consulta)
-        })
-        const data = await res.json()
-
+        const data = await getData(consulta)
         console.log(data);
         setDataChart({
             labels: data?.labels,
@@ -56,9 +64,20 @@ export const Selectors = () => {
         })
     }
 
+
+    const handleChangeTipoGrafica = () => {
+        setTipoGrafica(!tipoGrafica)
+    }
+
     return (
 
         <>
+            {
+                alert &&
+                <div className="alert alert-danger position-absolute w-100 text-center" role="alert">
+                    Ingrese un año para realizar la consulta
+                </div>
+            }
             <div className="container-app">
                 <form
                     onSubmit={handleSubmit}
@@ -97,27 +116,52 @@ export const Selectors = () => {
                                 value={nuevoProducto}
                                 onChange={handleChangeCheck}
                                 name="nuevoProducto"
+                                className="options-input"
                                 id=""
                             />
                         </div>
 
-                        <div className="options mt-5" >
+                        <div className="options mt-4" >
                             <label>Servicios nuevos mercado nacional</label>
                             <input
                                 type="checkbox"
                                 value={servicioNuevo}
                                 onChange={handleChangeCheck}
                                 name="servicioNuevo"
+                                className="options-input"
                                 id=""
                             />
                         </div>
-                        <div className="options mt-5" >
+                        <div className="options mt-4" >
                             <label>Servicios nuevos mercado internacional</label>
                             <input
                                 type="checkbox"
                                 value={servicioInternacional}
                                 onChange={handleChangeCheck}
                                 name="servicioInternacional"
+                                className="options-input"
+                                id=""
+                            />
+                        </div>
+                        <div className="options mt-4" >
+                            <label>Adquirio nuevos metodos de producción</label>
+                            <input
+                                type="checkbox"
+                                className="options-input"
+                                value={metodoProduccion}
+                                onChange={handleChangeCheck}
+                                name="metodoProduccion"
+                                id=""
+                            />
+                        </div>
+                        <div className="options mt-4" >
+                            <label>Al Finalizar el año tenia algun proyecto en marcha</label>
+                            <input
+                                type="checkbox"
+                                className="options-input"
+                                value={proyectoEnMarcha}
+                                onChange={handleChangeCheck}
+                                name="proyectoEnMarcha"
                                 id=""
                             />
                         </div>
@@ -132,10 +176,27 @@ export const Selectors = () => {
                 </form>
 
                 <div className="container-grafica">
-                    {/* <Bar data={dataChart} /> */}
-                    {/* <Pie data={dataChart} /> */}
-                    <Polar data={dataChart} />
-                    {/* <Line data={dataChart} /> */}
+                    <div className="form-check form-switch mb-5">
+                        <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id="flexSwitchCheckDefault"
+                            value={tipoGrafica}
+                            onChange={handleChangeTipoGrafica}
+                        />
+                        {
+                            tipoGrafica
+                                ? 'Grafica Tipo Torta'
+                                : 'Grafica Tipo Barras'
+                        }
+                    </div>
+                    {
+                        tipoGrafica
+                            ?
+                            <Polar data={dataChart} />
+                            :
+                            <Bar data={dataChart} />
+                    }
                 </div>
             </div>
         </>
