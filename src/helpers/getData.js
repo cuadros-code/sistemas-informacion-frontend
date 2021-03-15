@@ -1,6 +1,6 @@
 export const getData = async (consulta) => {
 
-    const res = await fetch('http://localhost:4001/si', {
+    const res = await fetch('https://encuetas-si.herokuapp.com/si', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
