@@ -20,6 +20,10 @@ export const Selectors = () => {
         servicioInternacional: false,
         metodoProduccion: false,
         proyectoEnMarcha: false,
+        metodosOrganizativos: false,
+        certificadoCalidad: false,
+        contratoConfidencial: false,
+        registroSoftware: false,
     })
 
     const {
@@ -28,7 +32,12 @@ export const Selectors = () => {
         servicioNuevo,
         servicioInternacional,
         metodoProduccion,
-        proyectoEnMarcha } = valueForm
+        proyectoEnMarcha,
+        metodosOrganizativos,
+        certificadoCalidad,
+        contratoConfidencial,
+        registroSoftware, } = valueForm
+
 
 
     const handleSubmit = async (e) => {
@@ -44,9 +53,13 @@ export const Selectors = () => {
 
         if (nuevoProducto) consulta.I1R1C1 = '1'
         if (servicioNuevo) consulta.I1R2C1 = '1'
-        if (servicioInternacional) consulta.I1R3C1 = '1'
         if (metodoProduccion) consulta.I1R9C1 = '1'
         if (proyectoEnMarcha) consulta.I5R1C1 = '1'
+        if (certificadoCalidad) consulta.VI6R1C1 = '1'
+        if (metodosOrganizativos) consulta.I1R10C1 = '1'
+        if (servicioInternacional) consulta.I1R3C1 = '1'
+        if (contratoConfidencial) consulta.VI3R4C1 = '1'
+        if (registroSoftware) consulta.VI1R4C1 = '1'
 
         const data = await getData(consulta)
         console.log(data);
@@ -109,7 +122,20 @@ export const Selectors = () => {
                             </select>
                         </div>
 
-                        <div className="options" >
+                        <div className="options mt-4" >
+                            <label>Adquirio algun registro de software para trabajar en producción
+                            </label>
+                            <input
+                                type="checkbox"
+                                className="options-input"
+                                value={registroSoftware}
+                                onChange={handleChangeCheck}
+                                name="registroSoftware"
+                                id=""
+                            />
+                        </div>
+
+                        <div className="options mt-4" >
                             <label>Adquisicion de nuevos productos</label>
                             <input
                                 type="checkbox"
@@ -154,6 +180,7 @@ export const Selectors = () => {
                                 id=""
                             />
                         </div>
+
                         <div className="options mt-4" >
                             <label>Al Finalizar el año tenia algun proyecto en marcha</label>
                             <input
@@ -166,11 +193,54 @@ export const Selectors = () => {
                             />
                         </div>
 
+                        <div className="options mt-4" >
+                            <label>Introdujo nuevos métodos
+                            organizativos
+                            implementados en el
+                            funcionamiento interno de
+                            la empresa.</label>
+                            <input
+                                type="checkbox"
+                                className="options-input"
+                                value={metodosOrganizativos}
+                                onChange={handleChangeCheck}
+                                name="metodosOrganizativos"
+                                id=""
+                            />
+                        </div>
+                        <div className="options mt-4" >
+                            <label>¿su empresa obtuvo
+                            certificaciones de calidad
+                            de producto?
+                            </label>
+                            <input
+                                type="checkbox"
+                                className="options-input"
+                                value={certificadoCalidad}
+                                onChange={handleChangeCheck}
+                                name="certificadoCalidad"
+                                id=""
+                            />
+                        </div>
+                        <div className="options mt-4" >
+                            <label>Firmo contratos de confidencialidad con sus empleados
+                            para la protección de la tecnología
+                            </label>
+                            <input
+                                type="checkbox"
+                                className="options-input"
+                                value={contratoConfidencial}
+                                onChange={handleChangeCheck}
+                                name="contratoConfidencial"
+                                id=""
+                            />
+                        </div>
+
                         <button
                             className="btn__consulta"
                         >
                             consultar
-                </button>
+                        </button>
 
                     </div>
                 </form>
