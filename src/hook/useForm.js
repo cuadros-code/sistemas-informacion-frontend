@@ -12,15 +12,10 @@ export const useForm = (initialState = {}) => {
     }
 
     const handleChangeCheck = ({ target }) => {
-
-        // console.log(target.value);
         setValueForm({
             ...valueForm,
             [target.name]: target.checked
         })
-
-
-        // console.log(valueForm);
     }
 
 

@@ -7,6 +7,7 @@ export const getData = async (consulta) => {
         },
         body: JSON.stringify(consulta)
     })
+
     const data = await res.json()
 
     return data
